@@ -1,4 +1,4 @@
-import agCoombs from '../svg/logos/OMG__AGCoombs.svg';
+import agCoombs from './svg/logos/OMG__AGCoombs.svg';
 import didi from './svg/logos/OMG__DiDi.svg';
 import epworth from './svg/logos/OMG__Epworth.svg';
 import lugCarrie from './svg/logos/OMG__LugCarrie.svg';
