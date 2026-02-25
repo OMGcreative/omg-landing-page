@@ -68,9 +68,10 @@ export function Pillars() {
 
                 <a
                   href="#contact"
-                  className="inline-flex items-center text-sm font-semibold uppercase tracking-wider text-accent group-hover:text-white transition-colors"
+                  className="group/link inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-accent group-hover:text-white transition-colors"
                 >
-                  {pillar.action} &rarr;
+                  {pillar.action}
+                  <span className="inline-block transition-transform duration-300 ease-out group-hover/link:translate-x-4">&rarr;</span>
                 </a>
               </div>
             </motion.div>

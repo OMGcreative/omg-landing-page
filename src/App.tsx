@@ -5,6 +5,7 @@
 
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
+import { Partners } from "./components/Partners";
 import { Pillars } from "./components/Pillars";
 import { PainPoints } from "./components/PainPoints";
 import { Portfolio } from "./components/Portfolio";
@@ -17,6 +18,7 @@ export default function App() {
       <Navbar />
       <main>
         <Hero />
+        <Partners />
         <Pillars />
         <PainPoints />
         <Portfolio />

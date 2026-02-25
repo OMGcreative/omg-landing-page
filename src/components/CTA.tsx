@@ -42,9 +42,9 @@ export function CTA() {
                 className="w-full px-6 py-4 rounded-xl bg-black/10 border border-black/10 text-black placeholder:text-black/50 focus:outline-none focus:ring-2 focus:ring-black/20"
               />
             </div>
-            <button className="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-black text-white font-medium rounded-xl hover:bg-black/90 transition-colors text-lg mt-4">
+            <button className="group w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-black text-white font-medium rounded-xl hover:bg-black/90 transition-colors text-lg mt-4">
               Get Free Brand Audit
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-5 h-5 transition-transform duration-300 ease-out group-hover:translate-x-4" />
             </button>
             <p className="text-xs text-black/60 text-center mt-4">
               By submitting, you agree to our Privacy Policy.

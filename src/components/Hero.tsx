@@ -51,10 +51,10 @@ export function Hero() {
           >
             <a
               href="#contact"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-accent text-white font-medium rounded-full hover:bg-orange-600 transition-colors text-lg"
+              className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-accent text-white font-medium rounded-full hover:bg-orange-600 transition-colors text-lg"
             >
               Get Your Free Audit
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-5 h-5 transition-transform duration-300 ease-out group-hover:translate-x-4" />
             </a>
             <a
               href="#pillars"
