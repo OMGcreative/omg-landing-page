@@ -3,28 +3,23 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
-import { Hero } from "./components/Hero";
-import { Partners } from "./components/Partners";
-import { Pillars } from "./components/Pillars";
-import { PainPoints } from "./components/PainPoints";
-import { Portfolio } from "./components/Portfolio";
-import { CTA } from "./components/CTA";
 import { Footer } from "./components/Footer";
+import { HomePage } from "./pages/HomePage";
+import { UpdateYourDigital } from "./pages/UpdateYourDigital";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-background text-primary selection:bg-accent selection:text-white">
-      <Navbar />
-      <main>
-        <Hero />
-        <Partners />
-        <Pillars />
-        <PainPoints />
-        <Portfolio />
-        <CTA />
-      </main>
-      <Footer />
-    </div>
+    <BrowserRouter>
+      <div className="min-h-screen bg-background text-primary selection:bg-accent selection:text-white">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/update-your-digital" element={<UpdateYourDigital />} />
+        </Routes>
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
