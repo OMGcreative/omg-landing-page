@@ -17,7 +17,7 @@ export function Navbar() {
           <a href="/" className="hover:text-primary transition-colors">
             Brand
           </a>
-          <a href="./update-your-digital" className="hover:text-primary transition-colors">
+          <a href="/update-your-digital" className="hover:text-primary transition-colors">
             Digital
           </a>
           {/* <a href="#" className="hover:text-primary transition-colors">
