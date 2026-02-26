@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { Menu } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function Navbar() {
   return (
@@ -14,12 +15,12 @@ export function Navbar() {
         </motion.div>
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-secondary">
-          <a href="/" className="hover:text-primary transition-colors">
+          <Link to="/" className="hover:text-primary transition-colors">
             Brand
-          </a>
-          <a href="/update-your-digital" className="hover:text-primary transition-colors">
+          </Link>
+          <Link to="/update-your-digital" className="hover:text-primary transition-colors">
             Digital
-          </a>
+          </Link>
           {/* <a href="#" className="hover:text-primary transition-colors">
             What We Do
           </a> */}
