@@ -44,7 +44,7 @@ export function Portfolio() {
           </a>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
           {projects.map((project, index) => (
             <motion.div
               key={project.name}
@@ -54,7 +54,7 @@ export function Portfolio() {
               transition={{ delay: index * 0.1 }}
               className="group cursor-pointer"
             >
-              <div className="relative aspect-[4/3] rounded-3xl overflow-hidden mb-6 bg-surface">
+              <div className="relative aspect-[4/3] rounded-xl overflow-hidden mb-6 bg-surface">
                 <img
                   src={project.image}
                   alt={project.name}

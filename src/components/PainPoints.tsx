@@ -70,7 +70,7 @@ export function PainPoints() {
     <section className="py-32 bg-surface border-y border-white/5">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-20">
-          <div className="sticky top-32 self-start">
+          <div className="lg:sticky top-32 self-start">
             <h2 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
               The Simple Test:
             </h2>
