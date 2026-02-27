@@ -482,10 +482,10 @@ export function UpdateYourDigital() {
               <ArrowRight className="w-5 h-5 transition-transform duration-300 ease-out group-hover:translate-x-4" />
             </a>
             <a
-              href="#pillars"
+              href="#check"
               className="inline-flex items-center justify-center px-8 py-4 bg-surface text-primary font-medium rounded-full hover:bg-surface-hover border border-white/5 transition-colors text-lg"
             >
-              Explore The 3 Pillars
+              Get a reality check
             </a>
           </motion.div>
         </div>
@@ -495,7 +495,7 @@ export function UpdateYourDigital() {
       <Partners />
 
       {/* ─── PAIN POINT CARDS ─── */}
-      <section className="py-24 md:py-32 bg-background relative">
+      <section id="check" className="py-24 md:py-32 bg-background relative">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -550,7 +550,7 @@ export function UpdateYourDigital() {
       <DeepDiveWrapper deepDives={deepDives} />
 
       {/* ─── DELIBERATELY DIFFERENT SOLUTION / PILLARS ─── */}
-      <section className="py-24 md:py-32 bg-background relative">
+      <section id="pillars" className="py-24 md:py-32 bg-background relative">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
