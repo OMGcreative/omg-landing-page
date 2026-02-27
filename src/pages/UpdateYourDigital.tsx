@@ -4,7 +4,7 @@
  */
 
 import { useState, useRef, useEffect, type FormEvent, type FocusEvent, type ChangeEvent } from "react";
-import { motion, useMotionValue, useTransform, useInView, animate } from "motion/react";
+import { motion, useMotionValue, useTransform, useInView, useScroll, animate } from "motion/react";
 import { ArrowRight, ChevronDown, CheckCircle, ShieldAlert, Smartphone, TrendingUp, Palette, Globe, Users } from "lucide-react";
 import { Partners } from "../components/Partners";
 
@@ -25,12 +25,159 @@ function AnimatedStat({ value, suffix }: { value: number; suffix: string }) {
 
   return (
     <div ref={ref} className="inline-flex items-baseline gap-1">
-      <motion.span className="text-7xl md:text-[7rem] font-bold leading-none tracking-tighter text-accent">
+      <motion.span
+        className="data-rounded text-7xl md:text-[7rem] font-bold leading-none tracking-tighter text-accent"
+        style={{ minWidth: "1ch", display: "inline-block", textAlign: "left", fontVariantNumeric: "tabular-nums", transition: "all 0.3s ease-in-out" }}
+      >
         {rounded}
       </motion.span>
-      <span className="text-7xl md:text-[7rem] font-bold leading-none tracking-tighter text-accent">%</span>
-      <span className="text-2xl md:text-3xl font-semibold text-secondary ml-2">{suffix}</span>
+      <span className="data-detail text-7xl md:text-[7rem] font-bold leading-none tracking-tighter text-accent">%</span>
+      <span className="data-suffix text-2xl md:text-3xl font-semibold text-secondary ml-2">{suffix}</span>
     </div>
+  );
+}
+
+/* ─── Deep-dive wrapper with parallax line art ─── */
+function DeepDiveWrapper({ deepDives }: { deepDives: any[] }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  // Parallax: paths move at ~30% of scroll speed
+  const svgY = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
+  // Circles move faster (50%) for depth separation
+  const circlesY = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]);
+
+  return (
+    <section
+      ref={containerRef}
+      className="relative overflow-hidden"
+      style={{
+        background: "linear-gradient(180deg, #111 0%, #181818 50%, #111 100%)",
+      }}
+    >
+      {/* ─── Parallax line art (right side, behind rows) ─── */}
+      <motion.div
+        className="absolute top-[20%] right-[10%] w-1/2 h-full pointer-events-none"
+        style={{ y: svgY, scale: 1.5 }}
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 500 1800"
+          className="w-full h-full absolute top-0 right-0"
+          preserveAspectRatio="xMaxYMid slice"
+        >
+          {/* Flowing curves */}
+          {Array.from({ length: 25 }).map((_, j) => (
+            <path
+              key={`curve-${j}`}
+              d={`M${300 + j * 12},0 C${400 + j * 8},${200 + j * 30} ${200 - j * 5},${500 + j * 25} ${350 + j * 6},${900 + j * 15} S${150 - j * 4},${1300 + j * 20} ${300 + j * 10},1800`}
+              fill="none"
+              stroke="#f97316"
+              strokeWidth={0.5 + j * 0.04}
+              opacity={0.15 + j * 0.03}
+            />
+          ))}
+        </svg>
+      </motion.div>
+
+      {/* ─── Floating accent circles (independent parallax, on top of paths) ─── */}
+      <motion.div
+        className="absolute top-[20%] right-[10%] w-1/2 h-full pointer-events-none z-[5]"
+        style={{ y: circlesY, scale: 1.5 }}
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 500 1800"
+          className="w-full h-full absolute top-0 right-0"
+          preserveAspectRatio="xMaxYMid slice"
+        >
+          <circle cx="380" cy="180" r="4" fill="#f97316" opacity="0.5" />
+          <circle cx="320" cy="450" r="7" fill="#f97316" opacity="0.4" />
+          <circle cx="400" cy="700" r="5" fill="#f97316" opacity="0.35" />
+          <circle cx="260" cy="950" r="8" fill="#f97316" opacity="0.45" />
+          <circle cx="350" cy="1200" r="4" fill="#f97316" opacity="0.3" />
+          <circle cx="410" cy="1400" r="6" fill="#f97316" opacity="0.4" />
+          <circle cx="300" cy="1650" r="5" fill="#f97316" opacity="0.35" />
+        </svg>
+      </motion.div>
+
+      {/* ─── Stacked rows ─── */}
+      <div 
+        className="relative z-10"
+        style={{backgroundColor: '#0606066e'}}
+      >
+        {deepDives.map((dd: any, i: number) => (
+          <div
+            key={dd.heading}
+            className="w-full py-10 md:py-14"
+            style={{
+              // borderTop: i > 0 ? "1px solid rgba(255,255,255,0.04)" : "none"           
+            }}
+          >
+            <div 
+              className="max-w-7xl mx-auto px-6"
+              
+            >
+              <div className="lg:w-1/2 w-full space-y-4">
+                {/* ── Part 1: Header (transparent) ── */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.97 }}
+                  whileInView={{ opacity: 1, scale: 1.0 }}
+                  viewport={{ once: false, amount: 0.3 }}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  className="rounded-2xl p-8 md:p-10"
+                >
+                  <span className="text-xs font-bold uppercase tracking-widest text-accent/80 mb-3 block">
+                    {dd.label}
+                  </span>
+                  <h2 className="text-3xl md:text-4xl font-bold leading-tight mb-4">
+                    {dd.heading}
+                  </h2>
+                  <p className="text-base text-secondary leading-relaxed">{dd.body}</p>
+                </motion.div>
+
+                {/* ── Part 2: Stat + Details (dark bg) ── */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.97 }}
+                  whileInView={{ opacity: 1, scale: 1.0 }}
+                  viewport={{ once: false, amount: 0.3 }}
+                  transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+                  className="bg-[#020202]/50 backdrop-blur-sm rounded-2xl p-8 md:p-10"
+                >
+                  <div className="mb-8">
+                    <AnimatedStat value={dd.statValue} suffix={dd.statSuffix} />
+                  </div>
+
+                  <div className="space-y-4 text-secondary text-sm leading-relaxed">
+                    <p>
+                      <strong className="text-primary">The Red Flags:</strong> {dd.redFlags}
+                    </p>
+                    <p>
+                      <strong className="text-primary">The Verdict:</strong> {dd.verdict}
+                    </p>
+                    {dd.extra?.map((txt: string, k: number) => (
+                      <p key={k} className="text-secondary/70 text-xs leading-relaxed">{txt}</p>
+                    ))}
+                  </div>
+
+                  <motion.a
+                    href="#audit"
+                    whileHover={{ x: 4 }}
+                    className="group inline-flex items-center gap-2 mt-6 text-base font-bold text-primary hover:text-accent transition-colors"
+                  >
+                    {dd.cta}
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-4" />
+                  </motion.a>
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -143,7 +290,7 @@ const painPoints = [
     icon: ShieldAlert,
     title: "The Trust Gap",
     description:
-      "A dated site signals a stagnant business. First impressions happen in milliseconds. They see you. They see your competition. If you're behind, you lose.",
+      "A dated website signals a stagnant business. First impressions happen in milliseconds. They see you. They see your competition. If you're behind, you lose.",
     action: "Get the trust back",
     color: "from-orange-500/20",
   },
@@ -196,26 +343,26 @@ const pillars = [
 const deepDives = [
   {
     label: "Letting your brand down",
-    heading: "Your site looks dated (and customers feel it instantly)",
-    body: "If your site hasn't had a meaningful update in 3+ years, it shows. First impressions happen in milliseconds.",
+    heading: "Your website looks dated (and customers feel it instantly)",
+    body: "If your website hasn't had a meaningful update in 3+ years, it shows. First impressions happen in milliseconds.",
     statValue: 93,
     statSuffix: "search first",
     redFlags:
       'Generic stock imagery, "templated" layouts that look like your competitors, and a design that no longer matches the quality of your actual work.',
     verdict:
-      "A dated site signals a stagnant business. Trust is your first sale; don't lose it at the homepage.",
-    cta: "Update your site",
+      "A dated website signals a stagnant business. Trust is your first sale; don't lose it at the homepage.",
+    cta: "Update your website",
   },
   {
     label: "You Must Be Mobile First",
     heading: "It doesn't work beautifully on mobile",
-    body: "With nearly 90% of search and social traffic coming from mobile, a \"desktop-first\" site is a liability.",
+    body: "With nearly 90% of search and social traffic coming from mobile, a \"desktop-first\" website is a liability.",
     statValue: 90,
     statSuffix: "mobile",
     redFlags:
       "If users have to pinch, zoom, or wait more than 3 seconds for a page to load, they leave.",
     verdict:
-      "If your site isn't guiding users toward a clear next step, it's a cost center, not a growth tool.",
+      "If your website isn't guiding users toward a clear next step, it's a cost center, not a growth tool.",
     cta: "Start Growing",
   },
   {
@@ -227,7 +374,7 @@ const deepDives = [
     redFlags:
       '75% of visitors found your website irrelevant! Unclear calls to action, and a confusing "path to purchase."',
     verdict:
-      "If your site isn't guiding users toward a clear next step, it's a cost center, not a growth tool.",
+      "If your website isn't guiding users toward a clear next step, it's a cost center, not a growth tool.",
     cta: "Convert Now",
     extra: [
       "1-2% for lead generation often signals a problem with the offer, the trust signals, or the ease of the process.",
@@ -238,7 +385,7 @@ const deepDives = [
 ];
 
 /* ─── Formspree endpoint ─── */
-const FORMSPREE_URL = "https://formspree.io/f/mnjbwnlw";
+const FORMSPREE_URL = "https://formspree.io/f/mbdawnrj";
 
 /* ═══════════════════════════════════════════════════════════
    PAGE COMPONENT
@@ -318,7 +465,7 @@ export function UpdateYourDigital() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-xl md:text-2xl text-secondary max-w-2xl mb-12 leading-relaxed font-light"
           >
-            Tired websites actively stop you getting business and sales. If your site is more than 3 years old, we need to chat. We build digital assets that drive growth. Let's get you sorted.
+            Tired websites actively stop you getting business and sales. If your website is more than 3 years old, we need to chat. We build digital assets that drive growth. Let's get you sorted.
           </motion.p>
 
           <motion.div
@@ -357,7 +504,7 @@ export function UpdateYourDigital() {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-4">Reality Check</h2>
-            <p className="text-xl text-secondary">Three signs you've outgrown your current site</p>
+            <p className="text-xl text-secondary">Three signs you've outgrown your current website</p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-6">
@@ -367,7 +514,7 @@ export function UpdateYourDigital() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.12 }}
+                transition={{ delay: i * 0.25 }}
                 className="group relative p-8 rounded-3xl bg-surface border border-white/5 overflow-hidden flex flex-col"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${p.color} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
@@ -395,29 +542,12 @@ export function UpdateYourDigital() {
             ))}
           </div>
         </div>
+        {/* Radial glow at bottom of pain points */}
+        <div className="absolute bottom-0 left-0 right-0 h-64 bg-[radial-gradient(ellipse_at_50%_100%,#f97316_0%,transparent_60%)] opacity-10 blur-[100px] pointer-events-none" />
       </section>
 
-      {/* ─── DECORATIVE DIVIDER ─── */}
-      <div className="relative h-40 md:h-56 overflow-hidden bg-background">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-accent/10 to-background" />
-        <svg
-          className="absolute bottom-0 left-0 w-full opacity-20"
-          viewBox="0 0 1440 100"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M0,50 C120,80 240,20 360,50 C480,80 600,20 720,50 C840,80 960,20 1080,50 C1200,80 1320,20 1440,50 L1440,100 L0,100 Z"
-            fill="url(#wave-grad)"
-          />
-          <defs>
-            <linearGradient id="wave-grad" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#f97316" stopOpacity="0.3" />
-              <stop offset="50%" stopColor="#f97316" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#f97316" stopOpacity="0.3" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
+      {/* ─── DEEP DIVE STAT SECTIONS (with parallax line art) ─── */}
+      <DeepDiveWrapper deepDives={deepDives} />
 
       {/* ─── DELIBERATELY DIFFERENT SOLUTION / PILLARS ─── */}
       <section className="py-24 md:py-32 bg-background relative">
@@ -432,12 +562,10 @@ export function UpdateYourDigital() {
               The "Deliberately Different" Solution
             </span>
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
-              You don't need a new "look." You need a digital strategy.
+              You don't need a new "logo." You&nbsp;need a unique brand strategy.
             </h2>
             <p className="text-xl text-secondary leading-relaxed">
-              We build high-performance assets designed to capture attention and convert it into revenue.
-              Your website isn't just a digital brochure—it's your 24/7 sales representative. If it's
-              underperforming, your entire business is capped.
+              We help our clients define what is possible for their brand.  A Deliberately Different brand strategy and creative approach will ensure you not only get noticed but also lead your marketing category. Your brand isn't a logo—it's what your customers remember and say about you. If you are not growing, your business is seen a a commodity in your marketing category. It's time to change.
             </p>
           </motion.div>
 
@@ -448,7 +576,7 @@ export function UpdateYourDigital() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.25 }}
                 className="group relative p-8 rounded-3xl bg-surface border border-white/5 overflow-hidden"
               >
                 <div
@@ -478,104 +606,6 @@ export function UpdateYourDigital() {
         </div>
       </section>
 
-      {/* ─── DEEP DIVE STAT SECTIONS ─── */}
-      {deepDives.map((dd, i) => (
-        <section
-          key={dd.heading}
-          className="relative py-24 md:py-32 overflow-hidden border-t border-white/5"
-          style={{
-            background:
-              i % 2 === 0
-                ? "linear-gradient(135deg, #0a0a0a 0%, #121212 50%, #0a0a0a 100%)"
-                : "linear-gradient(135deg, #121212 0%, #0a0a0a 50%, #121212 100%)",
-          }}
-        >
-          {/* Decorative line art */}
-          <div className="absolute top-0 right-0 w-1/2 h-full pointer-events-none opacity-20">
-            <svg viewBox="0 0 500 500" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
-              {Array.from({ length: 12 }).map((_, j) => (
-                <path
-                  key={j}
-                  d={`M${250 + j * 15},0 Q${400 + j * 10},${150 + j * 20} ${350 - j * 5},${300 + j * 10} T${200 + j * 15},500`}
-                  fill="none"
-                  stroke="#f97316"
-                  strokeWidth="0.5"
-                  opacity={0.4 + j * 0.05}
-                />
-              ))}
-            </svg>
-          </div>
-
-          <div className="max-w-7xl mx-auto px-6 relative z-10">
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-              >
-                <span className="text-xs font-bold uppercase tracking-widest text-accent/80 mb-4 block">
-                  {dd.label}
-                </span>
-
-                <h2 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
-                  {dd.heading}
-                </h2>
-
-                <p className="text-lg text-secondary leading-relaxed mb-8">{dd.body}</p>
-
-                <div className="border-t border-white/10 pt-8 mb-8">
-                  <AnimatedStat value={dd.statValue} suffix={dd.statSuffix} />
-                </div>
-
-                <div className="space-y-4 text-secondary text-sm leading-relaxed">
-                  <p>
-                    <strong className="text-primary">The Red Flags:</strong> {dd.redFlags}
-                  </p>
-                  <p>
-                    <strong className="text-primary">The Verdict:</strong> {dd.verdict}
-                  </p>
-                  {dd.extra?.map((txt, k) => (
-                    <p key={k} className="text-secondary/70 text-xs leading-relaxed">{txt}</p>
-                  ))}
-                </div>
-
-                <motion.a
-                  href="#audit"
-                  whileHover={{ x: 4 }}
-                  className="group inline-flex items-center gap-2 mt-8 text-base font-bold text-primary hover:text-accent transition-colors"
-                >
-                  {dd.cta}
-                  <ArrowRight className="w-4 h-4 transition-transform duration-300 ease-out group-hover:translate-x-4" />
-                </motion.a>
-              </motion.div>
-
-              {/* Decorative right column (visual flair) */}
-              <div className="hidden lg:block" aria-hidden="true">
-                <div className="relative w-full aspect-square">
-                  <svg viewBox="0 0 400 400" className="w-full h-full">
-                    {Array.from({ length: 20 }).map((_, j) => (
-                      <ellipse
-                        key={j}
-                        cx="200"
-                        cy="200"
-                        rx={40 + j * 15}
-                        ry={40 + j * 15}
-                        fill="none"
-                        stroke="#f97316"
-                        strokeWidth="0.3"
-                        opacity={0.15 + j * 0.02}
-                        transform={`rotate(${j * 9} 200 200)`}
-                      />
-                    ))}
-                    <circle cx="200" cy="200" r="8" fill="#f97316" opacity="0.6" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      ))}
-
       {/* ─── AUDIT FORM / CTA ─── */}
       <section id="audit" className="py-24 md:py-32 bg-accent relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/noise/1000/1000')] opacity-5 mix-blend-overlay pointer-events-none" />
@@ -588,7 +618,7 @@ export function UpdateYourDigital() {
             className="text-center mb-12"
           >
             <h2 className="text-5xl md:text-7xl font-bold text-black mb-6 tracking-tight">
-              Is your site holding you back?
+              Is your website holding you&nbsp;back?
               <br />
               Find out.
             </h2>
@@ -767,76 +797,7 @@ export function UpdateYourDigital() {
         </div>
       </section>
 
-      {/* ─── CONTACT / FOOTER ─── */}
-      <section className="py-16 md:py-24 bg-surface border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-16">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-8">Let's chat</h2>
-              <div className="space-y-2 text-secondary">
-                <p className="font-semibold text-primary">OMG! Creative</p>
-                <p>Level 2, 10 Queens Road*</p>
-                <p>Melbourne Victoria 3004</p>
-                <p className="pt-4">
-                  <a href="tel:0396540532" className="hover:text-primary transition-colors">
-                    03 9654 0532
-                  </a>
-                </p>
-                <p>
-                  <a href="mailto:hello@omgcreative.com.au" className="hover:text-primary transition-colors">
-                    hello@omgcreative.com.au
-                  </a>
-                </p>
-                <p className="pt-2">
-                  <a
-                    href="https://www.google.com/maps/place/OMG!+Creative/@-37.8382331,144.9743713,19.44z"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-accent hover:text-orange-400 transition-colors text-sm"
-                  >
-                    *Entry via Queens Lane &rarr;
-                  </a>
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <FloatingInput id="contact-email" name="contact_email" label="Email*" type="email" required validationMessage="Please enter your email" />
-              <div className="grid grid-cols-2 gap-4">
-                <FloatingInput id="contact-first" name="contact_first_name" label="First Name*" required validationMessage="Please enter your first name" />
-                <FloatingInput id="contact-last" name="contact_last_name" label="Last Name*" required validationMessage="Please enter your last name" />
-              </div>
-              <FloatingInput id="contact-phone" name="contact_phone" label="Phone Number*" type="tel" required validationMessage="Please enter your phone number" />
-              <FloatingInput id="contact-industry" name="contact_industry" label="Industry*" required validationMessage="Please enter your industry" />
-              <FloatingInput id="contact-company" name="contact_company" label="Company Name*" required validationMessage="Please enter your company name" />
-
-              <div className="relative">
-                <textarea
-                  id="contact-message"
-                  name="contact_message"
-                  rows={3}
-                  placeholder=" "
-                  className="peer w-full px-4 pt-6 pb-3 bg-white/5 border border-white/10 rounded-xl text-primary focus:outline-none focus:border-accent placeholder-transparent transition-colors resize-y"
-                />
-                <label
-                  htmlFor="contact-message"
-                  className="pointer-events-none absolute left-4 top-4 text-secondary/70 font-medium origin-left transition-all duration-300 ease-out peer-focus:top-1 peer-focus:scale-75 peer-focus:text-accent peer-[:not(:placeholder-shown)]:top-1 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-accent"
-                >
-                  Your message (optional)
-                </label>
-              </div>
-
-              <button
-                type="button"
-                className="group w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-accent text-white font-bold rounded-xl hover:bg-orange-600 transition-colors text-lg mt-2 uppercase tracking-wider"
-              >
-                Submit
-                <ArrowRight className="w-5 h-5 transition-transform duration-300 ease-out group-hover:translate-x-4" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      
     </main>
   );
 }

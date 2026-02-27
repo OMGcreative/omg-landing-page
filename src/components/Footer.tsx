@@ -1,4 +1,9 @@
+import { useLocation } from "react-router-dom";
+
 export function Footer() {
+  const { pathname } = useLocation();
+  const isDigital = pathname === "/update-your-digital";
+
   return (
     <footer className="bg-background py-12 border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6">
@@ -8,8 +13,9 @@ export function Footer() {
               OMG<span className="text-accent">!</span>
             </div>
             <p className="text-secondary max-w-sm">
-              We build digital assets that lead, perform, and drive growth. Stop
-              losing customers to a dated digital presence.
+              {isDigital
+                ? "We build digital assets that lead, perform, and drive growth. Stop losing customers to a dated digital presence."
+                : "We build brand assets that lead, perform, and drive growth. Stop losing customers to a dated brand experience."}
             </p>
           </div>
 
