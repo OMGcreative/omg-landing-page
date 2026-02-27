@@ -607,7 +607,7 @@ export function UpdateYourDigital() {
       </section>
 
       {/* ─── AUDIT FORM / CTA ─── */}
-      <section id="audit" className="py-24 md:py-32 bg-accent relative overflow-hidden">
+      <section id="contact" className="py-24 md:py-32 bg-accent relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://picsum.photos/seed/noise/1000/1000')] opacity-5 mix-blend-overlay pointer-events-none" />
 
         <div className="max-w-5xl mx-auto px-6 relative z-10">
