@@ -7,6 +7,7 @@ import { useState, useRef, useEffect, type FormEvent, type FocusEvent, type Chan
 import { motion, useMotionValue, useTransform, useInView, useScroll, animate } from "motion/react";
 import { ArrowRight, ChevronDown, CheckCircle, ShieldAlert, Smartphone, TrendingUp, Palette, Globe, Users } from "lucide-react";
 import { Partners } from "../components/Partners";
+import { useDocumentHead } from "../hooks/useDocumentHead";
 
 /* ─── Animated counter ─── */
 function AnimatedStat({ value, suffix }: { value: number; suffix: string }) {
@@ -391,6 +392,14 @@ const FORMSPREE_URL = "https://formspree.io/f/mbdawnrj";
    PAGE COMPONENT
    ═══════════════════════════════════════════════════════════ */
 export function UpdateYourDigital() {
+  useDocumentHead({
+    title: "Update Your Digital — OMG! Creative",
+    description:
+      "Is your website holding you back? We build high-performance digital assets that drive growth. Free digital audit from OMG! Creative.",
+    canonical: "https://omgcreative.com.au/update-your-digital/",
+    ogUrl: "https://omgcreative.com.au/update-your-digital/",
+  });
+
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [formError, setFormError] = useState("");
 
@@ -500,7 +509,8 @@ export function UpdateYourDigital() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            // viewport={{ once: true }}
+            viewport={{ once: false, amount: 0.3 }}
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-bold mb-4">Reality Check</h2>

@@ -77,10 +77,10 @@ export function Footer() {
             reserved.
           </p>
           <div className="flex gap-4 mt-4 md:mt-0">
-            <a href="#" className="hover:text-primary transition-colors">
+            <a href="https://omgcreative.com.au/privacy-policy/" className="hover:text-primary transition-colors">
               Privacy Policy
             </a>
-            <a href="#" className="hover:text-primary transition-colors">
+            <a href="https://omgcreative.com.au/terms-of-service/" className="hover:text-primary transition-colors">
               Terms of Service
             </a>
           </div>
