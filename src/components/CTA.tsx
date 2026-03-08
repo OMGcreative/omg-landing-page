@@ -226,6 +226,23 @@ export function CTA() {
                 </p>
               )}
 
+              <div className="flex items-start gap-3 pt-4">
+                <input
+                  id="cta-privacy"
+                  name="privacy_consent"
+                  type="checkbox"
+                  required
+                  className="mt-1 w-4 h-4 accent-black"
+                />
+                <label htmlFor="cta-privacy" className="text-xs text-black/60 leading-relaxed">
+                  By clicking this box, you agree to our{" "}
+                  <a href="https://omgcreative.com.au/privacy/" className="underline hover:text-black transition-colors" target="_blank" rel="noopener noreferrer">
+                    privacy policies
+                  </a>.
+                  By clicking submit below, you consent to allow omgcreative.com.au to store and process the personal information submitted above to provide you the content requested.
+                </label>
+              </div>
+
               <button
                 type="submit"
                 disabled={status === "submitting"}
@@ -234,9 +251,6 @@ export function CTA() {
                 {status === "submitting" ? "Sending..." : "Get Free Brand Audit"}
                 <ArrowRight className="w-5 h-5 transition-transform duration-300 ease-out group-hover:translate-x-4" />
               </button>
-              <p className="text-xs text-black/60 text-center mt-4">
-                By submitting, you agree to our Privacy Policy.
-              </p>
             </form>
           )}
         </motion.div>

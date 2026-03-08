@@ -783,7 +783,7 @@ export function UpdateYourDigital() {
                 />
                 <label htmlFor="ud-privacy" className="text-xs text-black/60 leading-relaxed">
                   By clicking this box, you agree to our{" "}
-                  <a href="https://omgcreative.com.au/privacy-policy/" className="underline hover:text-black transition-colors" target="_blank" rel="noopener noreferrer">
+                  <a href="https://omgcreative.com.au/privacy/" className="underline hover:text-black transition-colors" target="_blank" rel="noopener noreferrer">
                     privacy policies
                   </a>.
                   By clicking submit below, you consent to allow omgcreative.com.au to store and process the personal information submitted above to provide you the content requested.
