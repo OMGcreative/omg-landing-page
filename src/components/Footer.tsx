@@ -48,25 +48,21 @@ export function Footer() {
             <h4 className="font-semibold mb-4">Social</h4>
             <ul className="text-secondary space-y-2 text-sm">
               <li>
-                <a href="https://www.linkedin.com/company/omg-creative" className="hover:text-primary transition-colors">
+                <a href="https://www.linkedin.com/company/omg-creative" target="_blank" className="hover:text-primary transition-colors">
                   LinkedIn
                 </a>
               </li>
               <li>
-                <a href="https://www.instagram.com/omg.creative.melbourne/" className="hover:text-primary transition-colors">
+                <a href="https://www.instagram.com/omg.creative.melbourne/" target="_blank" className="hover:text-primary transition-colors">
                   Instagram
                 </a>
               </li>
               <li>
-                <a href="https://www.facebook.com/OMGMelbourne/" className="hover:text-primary transition-colors">
+                <a href="https://www.facebook.com/OMGMelbourne/" target="_blank" className="hover:text-primary transition-colors">
                   Facebook
                 </a>
               </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  DesignRush
-                </a>
-              </li>
+              
             </ul>
           </div>
         </div>
