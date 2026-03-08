@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { HomePage } from "./pages/HomePage";
+import { UpdateYourBrand } from "./pages/UpdateYourBrand";
 import { UpdateYourDigital } from "./pages/UpdateYourDigital";
 
 function ScrollToTop() {
@@ -26,6 +27,7 @@ export default function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/update-your-brand" element={<UpdateYourBrand />} />
           <Route path="/update-your-digital" element={<UpdateYourDigital />} />
         </Routes>
         <Footer />

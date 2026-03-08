@@ -5,6 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 export function Navbar() {
   const { pathname } = useLocation();
   const isDigital = pathname === "/update-your-digital";
+  const isRoot = pathname === "/";
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-white/5">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -17,10 +18,10 @@ export function Navbar() {
         </motion.div>
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-secondary">
-          <Link to="/" className="hover:text-primary transition-colors">
+          <Link to="/update-your-brand" className={`hover:text-primary transition-colors ${pathname === '/update-your-brand' ? 'text-primary font-semibold' : ''}`}>
             Brand
           </Link>
-          <Link to="/update-your-digital" className="hover:text-primary transition-colors">
+          <Link to="/update-your-digital" className={`hover:text-primary transition-colors ${pathname === '/update-your-digital' ? 'text-primary font-semibold' : ''}`}>
             Digital
           </Link>
           {/* <a href="#" className="hover:text-primary transition-colors">
@@ -33,12 +34,14 @@ export function Navbar() {
           animate={{ opacity: 1, x: 0 }}
           className="flex items-center gap-4"
         >
-          <a
-            href="#contact"
-            className="hidden md:inline-flex items-center justify-center px-6 py-2.5 bg-white text-black font-medium rounded-full hover:bg-gray-200 transition-colors"
-          >
-            {isDigital ? "Free Digital Audit" : "Free Brand Audit"}
-          </a>
+          {!isRoot && (
+            <a
+              href="#contact"
+              className="hidden md:inline-flex items-center justify-center px-6 py-2.5 bg-white text-black font-medium rounded-full hover:bg-gray-200 transition-colors"
+            >
+              {isDigital ? "Free Digital Audit" : "Free Brand Audit"}
+            </a>
+          )}
           {/* <button className="md:hidden p-2 text-primary">
             <Menu className="w-6 h-6" />
           </button> */}
