@@ -1,7 +1,8 @@
-import { useState, type FormEvent, type FocusEvent, type ChangeEvent } from "react";
+import { useState, useEffect, type FormEvent, type FocusEvent, type ChangeEvent } from "react";
 import { motion } from "motion/react";
 import { ArrowRight, ChevronDown, CheckCircle } from "lucide-react";
 import { useForm } from "@formspree/react";
+import { useNavigate } from "react-router-dom";
 
 function FloatingInput({
   label,
@@ -132,7 +133,14 @@ function FloatingInput({
 const FORMSPREE_ID = "mnjbwnlw";
 
 export function CTA() {
+  const navigate = useNavigate();
   const [state, submitForm] = useForm(FORMSPREE_ID);
+
+  useEffect(() => {
+    if (state.succeeded) {
+      navigate('/thank-you');
+    }
+  }, [state.succeeded, navigate]);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     const form = e.currentTarget;
@@ -153,6 +161,11 @@ export function CTA() {
       firstInvalid?.focus();
       return;
     }
+
+    // Save form data locally before submission
+    const formData = new FormData(form);
+    const dataObj = Object.fromEntries(formData.entries());
+    localStorage.setItem("omg_cta_form_data", JSON.stringify(dataObj));
 
     submitForm(e);
   }
@@ -175,26 +188,11 @@ export function CTA() {
             presence that actually converts.
           </p>
 
-          {state.succeeded ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="max-w-md mx-auto text-center py-12"
-            >
-              <CheckCircle className="w-16 h-16 text-black mx-auto mb-6" />
-              <h3 className="text-2xl font-bold text-black mb-3">
-                Thank you!
-              </h3>
-              <p className="text-lg text-black/70">
-                We've received your details and will be in touch shortly with your free brand audit.
-              </p>
-            </motion.div>
-          ) : (
-            <form
-              onSubmit={handleSubmit}
-              noValidate
-              className="max-w-md mx-auto space-y-4 text-left"
-            >
+          <form
+            onSubmit={handleSubmit}
+            noValidate
+            className="max-w-md mx-auto space-y-4 text-left"
+          >
 
               <FloatingInput id="name" name="name" label="Your Name" required validationMessage="Please enter your name" />
               <FloatingInput id="email" name="email" label="Work Email" type="email" required validationMessage="Please enter your work email" />
@@ -234,7 +232,6 @@ export function CTA() {
                 <ArrowRight className="w-5 h-5 transition-transform duration-300 ease-out group-hover:translate-x-4" />
               </button>
             </form>
-          )}
         </motion.div>
       </div>
     </section>

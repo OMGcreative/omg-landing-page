@@ -10,6 +10,7 @@ import { Partners } from "../components/Partners";
 import { Portfolio } from "../components/Portfolio";
 import { useDocumentHead } from "../hooks/useDocumentHead";
 import { useForm } from "@formspree/react";
+import { useNavigate } from "react-router-dom";
 
 /* ─── Animated counter ─── */
 function AnimatedStat({ value, suffix }: { value: number; suffix: string }) {
@@ -405,7 +406,14 @@ export function UpdateYourDigital() {
     ogUrl: "https://omgcreative.com.au/update-your-digital/",
   });
 
+  const navigate = useNavigate();
   const [state, submitForm] = useForm(FORMSPREE_ID);
+
+  useEffect(() => {
+    if (state.succeeded) {
+      navigate('/thank-you');
+    }
+  }, [state.succeeded, navigate]);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     const form = e.currentTarget;
@@ -421,6 +429,12 @@ export function UpdateYourDigital() {
       firstInvalid?.focus();
       return;
     }
+
+    // Save form data locally before submission
+    const formData = new FormData(form);
+    const dataObj = Object.fromEntries(formData.entries());
+    localStorage.setItem("omg_uyd_form_data", JSON.stringify(dataObj));
+
     submitForm(e);
   }
 
@@ -626,25 +640,12 @@ export function UpdateYourDigital() {
             </p>
           </motion.div>
 
-          {state.succeeded ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="max-w-md mx-auto text-center py-12"
-            >
-              <CheckCircle className="w-16 h-16 text-black mx-auto mb-6" />
-              <h3 className="text-2xl font-bold text-black mb-3">Thank you!</h3>
-              <p className="text-lg text-black/70">
-                We've received your details and will be in touch shortly with your free audit.
-              </p>
-            </motion.div>
-          ) : (
-            <form
-              onSubmit={handleSubmit}
-              noValidate
-              className="max-w-lg mx-auto space-y-4 text-left"
-            >
-              <div className="grid grid-cols-2 gap-4">
+          <form
+            onSubmit={handleSubmit}
+            noValidate
+            className="max-w-lg mx-auto space-y-4 text-left"
+          >
+            <div className="grid grid-cols-2 gap-4">
                 <FloatingInput id="ud-first-name" name="first_name" label="First Name*" required />
                 <FloatingInput id="ud-last-name" name="last_name" label="Last Name*" required />
               </div>
@@ -699,7 +700,6 @@ export function UpdateYourDigital() {
                 <ArrowRight className="w-5 h-5 transition-transform duration-300 ease-out group-hover:translate-x-4" />
               </button>
             </form>
-          )}
         </div>
       </section>
 
