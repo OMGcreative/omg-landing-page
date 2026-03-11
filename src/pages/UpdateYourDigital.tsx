@@ -7,7 +7,9 @@ import { useState, useRef, useEffect, type FormEvent, type FocusEvent, type Chan
 import { motion, useMotionValue, useTransform, useInView, useScroll, animate } from "motion/react";
 import { ArrowRight, ChevronDown, CheckCircle, ShieldAlert, Smartphone, TrendingUp, Palette, Globe, Users } from "lucide-react";
 import { Partners } from "../components/Partners";
+import { Portfolio } from "../components/Portfolio";
 import { useDocumentHead } from "../hooks/useDocumentHead";
+import { useForm } from "@formspree/react";
 
 /* ─── Animated counter ─── */
 function AnimatedStat({ value, suffix }: { value: number; suffix: string }) {
@@ -165,7 +167,7 @@ function DeepDiveWrapper({ deepDives }: { deepDives: any[] }) {
                   </div>
 
                   <motion.a
-                    href="#audit"
+                    href="#contact"
                     whileHover={{ x: 4 }}
                     className="group inline-flex items-center gap-2 mt-6 text-base font-bold text-primary hover:text-accent transition-colors"
                   >
@@ -191,6 +193,7 @@ function FloatingInput({
   options,
   required,
   validationMessage,
+  pattern,
 }: {
   label: string;
   name: string;
@@ -199,12 +202,13 @@ function FloatingInput({
   options?: string[];
   required?: boolean;
   validationMessage?: string;
+  pattern?: string;
 }) {
   const [error, setError] = useState("");
   const [touched, setTouched] = useState(false);
 
   function validate(value: string) {
-    if (required && !value.trim()) return validationMessage || `${label} is required`;
+    if (required && !value.trim()) return validationMessage || `${label.replace('*', '')} is required`;
     if (value.trim() && type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Please enter a valid email address";
     if (value.trim() && type === "url" && !/^https?:\/\/.+\..+/.test(value)) return "Please enter a valid URL (e.g. https://example.com)";
     if (value.trim() && type === "tel" && !/^[\d\s\-+().]{7,}$/.test(value)) return "Please enter a valid phone number";
@@ -224,7 +228,7 @@ function FloatingInput({
 
   if (options) {
     return (
-      <div>
+      <div className="w-full">
         <div className="relative">
           <select
             id={id}
@@ -233,53 +237,54 @@ function FloatingInput({
             required={required}
             onBlur={handleBlur}
             onChange={handleChange}
-            className={`peer w-full px-4 pt-6 pb-3 bg-white/5 border border-white/10 rounded-xl text-primary focus:outline-none focus:border-accent appearance-none transition-colors ${
-              showError ? "border-red-500 focus:border-red-500" : ""
+            className={`peer w-full px-3 pt-6 pb-3 bg-white/10 border-0 border-b text-black focus:outline-none focus:border-b-2 appearance-none transition-colors ${
+              showError ? "border-red-600 focus:border-red-600" : "border-black/10 focus:border-black"
             }`}
           >
             <option value="" disabled hidden />
             {options.map((opt) => (
-              <option key={opt} value={opt} className="bg-surface text-primary">
+              <option key={opt} value={opt} className="bg-white text-black">
                 {opt}
               </option>
             ))}
           </select>
           <label
             htmlFor={id}
-            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-secondary/70 font-medium origin-left transition-all duration-300 ease-out peer-focus:top-2 peer-focus:translate-y-0 peer-focus:scale-75 peer-focus:text-accent peer-[:not([value=''])]:top-2 peer-[:not([value=''])]:translate-y-0 peer-[:not([value=''])]:scale-75 peer-[:not([value=''])]:text-accent"
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-black/50 font-medium origin-left transition-all duration-300 ease-out peer-focus:top-0 peer-focus:translate-y-0 peer-focus:scale-75 peer-focus:text-black/70 peer-[:not([value=''])]:top-0 peer-[:not([value=''])]:translate-y-0 peer-[:not([value=''])]:scale-75 peer-[:not([value=''])]:text-black/70"
           >
             {label}
           </label>
-          <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50 pointer-events-none" />
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/40 pointer-events-none" />
         </div>
-        {showError && <p className="text-xs text-red-400 mt-1 ml-1">{error}</p>}
+        {showError && <p className="text-xs text-red-700 mt-1 ml-1 font-medium">{error}</p>}
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="w-full">
       <div className="relative">
         <input
           id={id}
           name={name}
           type={type}
           required={required}
+          pattern={pattern}
           onBlur={handleBlur}
           onChange={handleChange}
           placeholder=" "
-          className={`peer w-full px-4 pt-6 pb-3 bg-white/5 border border-white/10 rounded-xl text-primary focus:outline-none focus:border-accent placeholder-transparent transition-colors ${
-            showError ? "border-red-500 focus:border-red-500" : ""
+          className={`peer w-full px-3 pt-6 pb-3 bg-white/10 border-0 border-b text-black focus:outline-none focus:border-b-2 placeholder-transparent transition-colors ${
+            showError ? "border-red-600 focus:border-red-600" : "border-black/10 focus:border-black"
           }`}
         />
         <label
           htmlFor={id}
-          className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-secondary/70 font-medium origin-left transition-all duration-300 ease-out peer-focus:top-2 peer-focus:translate-y-0 peer-focus:scale-75 peer-focus:text-accent peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-accent"
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-black/50 font-medium origin-left transition-all duration-300 ease-out peer-focus:top-0 peer-focus:translate-y-0 peer-focus:scale-75 peer-focus:text-black/70 peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-black/70"
         >
           {label}
         </label>
       </div>
-      {showError && <p className="text-xs text-red-400 mt-1 ml-1">{error}</p>}
+      {showError && <p className="text-xs text-red-700 mt-1 ml-1 font-medium">{error}</p>}
     </div>
   );
 }
@@ -386,7 +391,7 @@ const deepDives = [
 ];
 
 /* ─── Formspree endpoint ─── */
-const FORMSPREE_URL = "https://formspree.io/f/mbdawnrj";
+const FORMSPREE_ID = "mbdawnrj";
 
 /* ═══════════════════════════════════════════════════════════
    PAGE COMPONENT
@@ -400,14 +405,12 @@ export function UpdateYourDigital() {
     ogUrl: "https://omgcreative.com.au/update-your-digital/",
   });
 
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [formError, setFormError] = useState("");
+  const [state, submitForm] = useForm(FORMSPREE_ID);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setFormError("");
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     const form = e.currentTarget;
     if (!form.checkValidity()) {
+      e.preventDefault();
       const firstInvalid = form.querySelector(":invalid") as HTMLElement | null;
       firstInvalid?.focus();
       firstInvalid?.blur();
@@ -418,24 +421,7 @@ export function UpdateYourDigital() {
       firstInvalid?.focus();
       return;
     }
-    setStatus("submitting");
-    try {
-      const res = await fetch(FORMSPREE_URL, {
-        method: "POST",
-        body: new FormData(form),
-        headers: { Accept: "application/json" },
-      });
-      if (res.ok) {
-        setStatus("success");
-        form.reset();
-      } else {
-        setStatus("error");
-        setFormError("Something went wrong. Please try again.");
-      }
-    } catch {
-      setStatus("error");
-      setFormError("Something went wrong. Please try again.");
-    }
+    submitForm(e);
   }
 
   return (
@@ -484,7 +470,7 @@ export function UpdateYourDigital() {
             className="flex flex-col sm:flex-row gap-4"
           >
             <a
-              href="#audit"
+              href="#contact"
               className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-accent text-white font-medium rounded-full hover:bg-orange-600 transition-colors text-lg"
             >
               Audit my performance
@@ -542,7 +528,7 @@ export function UpdateYourDigital() {
                 </div>
 
                 <a
-                  href="#audit"
+                  href="#contact"
                   className="relative z-10 group/link inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-accent group-hover:text-white transition-colors"
                 >
                   {p.action}
@@ -601,7 +587,7 @@ export function UpdateYourDigital() {
                     {pillar.description}
                   </p>
                   <a
-                    href="#audit"
+                    href="#contact"
                     className="group/link inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-accent group-hover:text-white transition-colors"
                   >
                     {pillar.action}
@@ -615,6 +601,9 @@ export function UpdateYourDigital() {
           </div>
         </div>
       </section>
+
+      {/* ─── PORTFOLIO ─── */}
+      <Portfolio />
 
       {/* ─── AUDIT FORM / CTA ─── */}
       <section id="contact" className="py-24 md:py-32 bg-accent relative overflow-hidden">
@@ -637,7 +626,7 @@ export function UpdateYourDigital() {
             </p>
           </motion.div>
 
-          {status === "success" ? (
+          {state.succeeded ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -656,122 +645,27 @@ export function UpdateYourDigital() {
               className="max-w-lg mx-auto space-y-4 text-left"
             >
               <div className="grid grid-cols-2 gap-4">
-                <div className="relative">
-                  <input
-                    id="ud-first-name"
-                    name="first_name"
-                    required
-                    placeholder=" "
-                    className="peer w-full px-3 pt-6 pb-3 bg-white/10 border-0 border-b border-black/10 text-black focus:outline-none focus:border-b-2 focus:border-black placeholder-transparent transition-colors"
-                  />
-                  <label
-                    htmlFor="ud-first-name"
-                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-black/50 font-medium origin-left transition-all duration-300 ease-out peer-focus:top-0 peer-focus:translate-y-0 peer-focus:scale-75 peer-focus:text-black/70 peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-black/70"
-                  >
-                    First Name*
-                  </label>
-                </div>
-                <div className="relative">
-                  <input
-                    id="ud-last-name"
-                    name="last_name"
-                    required
-                    placeholder=" "
-                    className="peer w-full px-3 pt-6 pb-3 bg-white/10 border-0 border-b border-black/10 text-black focus:outline-none focus:border-b-2 focus:border-black placeholder-transparent transition-colors"
-                  />
-                  <label
-                    htmlFor="ud-last-name"
-                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-black/50 font-medium origin-left transition-all duration-300 ease-out peer-focus:top-0 peer-focus:translate-y-0 peer-focus:scale-75 peer-focus:text-black/70 peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-black/70"
-                  >
-                    Last Name*
-                  </label>
-                </div>
+                <FloatingInput id="ud-first-name" name="first_name" label="First Name*" required />
+                <FloatingInput id="ud-last-name" name="last_name" label="Last Name*" required />
               </div>
 
-              <div className="relative">
-                <input
-                  id="ud-email"
-                  name="email"
-                  type="email"
-                  required
-                  placeholder=" "
-                  className="peer w-full px-3 pt-6 pb-3 bg-white/10 border-0 border-b border-black/10 text-black focus:outline-none focus:border-b-2 focus:border-black placeholder-transparent transition-colors"
-                />
-                <label
-                  htmlFor="ud-email"
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-black/50 font-medium origin-left transition-all duration-300 ease-out peer-focus:top-0 peer-focus:translate-y-0 peer-focus:scale-75 peer-focus:text-black/70 peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-black/70"
-                >
-                  Email*
-                </label>
-              </div>
+              <FloatingInput id="ud-email" name="email" type="email" label="Email*" required />
+              <FloatingInput id="ud-phone" name="phone" type="tel" label="Phone Number" pattern="^[\d\s\-+().]{7,}$" />
+              <FloatingInput id="ud-url" name="website" type="url" label="Business URL" pattern="^https?:\/\/.+\..+" />
+              <FloatingInput id="ud-company" name="company" label="Company Name*" required />
 
-              <div className="relative">
-                <input
-                  id="ud-phone"
-                  name="phone"
-                  type="tel"
-                  placeholder=" "
-                  className="peer w-full px-3 pt-6 pb-3 bg-white/10 border-0 border-b border-black/10 text-black focus:outline-none focus:border-b-2 focus:border-black placeholder-transparent transition-colors"
-                />
-                <label
-                  htmlFor="ud-phone"
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-black/50 font-medium origin-left transition-all duration-300 ease-out peer-focus:top-0 peer-focus:translate-y-0 peer-focus:scale-75 peer-focus:text-black/70 peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-black/70"
-                >
-                  Phone Number
-                </label>
-              </div>
-
-              <div className="relative">
-                <input
-                  id="ud-url"
-                  name="website"
-                  type="url"
-                  placeholder=" "
-                  className="peer w-full px-3 pt-6 pb-3 bg-white/10 border-0 border-b border-black/10 text-black focus:outline-none focus:border-b-2 focus:border-black placeholder-transparent transition-colors"
-                />
-                <label
-                  htmlFor="ud-url"
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-black/50 font-medium origin-left transition-all duration-300 ease-out peer-focus:top-0 peer-focus:translate-y-0 peer-focus:scale-75 peer-focus:text-black/70 peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-black/70"
-                >
-                  Business URL
-                </label>
-              </div>
-
-              <div className="relative">
-                <input
-                  id="ud-company"
-                  name="company"
-                  required
-                  placeholder=" "
-                  className="peer w-full px-3 pt-6 pb-3 bg-white/10 border-0 border-b border-black/10 text-black focus:outline-none focus:border-b-2 focus:border-black placeholder-transparent transition-colors"
-                />
-                <label
-                  htmlFor="ud-company"
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-black/50 font-medium origin-left transition-all duration-300 ease-out peer-focus:top-0 peer-focus:translate-y-0 peer-focus:scale-75 peer-focus:text-black/70 peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-black/70"
-                >
-                  Company Name*
-                </label>
-              </div>
-
-              <div className="relative">
-                <label htmlFor="ud-frustration" className="block text-sm text-black/50 font-medium mb-1">
-                  What is your biggest digital frustration?
-                </label>
-                <select
-                  id="ud-frustration"
-                  name="frustration"
-                  defaultValue=""
-                  className="w-full px-3 py-3 bg-white/10 border-0 border-b border-black/10 text-black focus:outline-none focus:border-b-2 focus:border-black appearance-none transition-colors"
-                >
-                  <option value="">Select one…</option>
-                  <option value="My website looks dated">My website looks dated</option>
-                  <option value="Poor mobile experience">Poor mobile experience</option>
-                  <option value="Low conversion rates">Low conversion rates</option>
-                  <option value="Brand doesn't reflect our quality">Brand doesn't reflect our quality</option>
-                  <option value="Not sure where to start">Not sure where to start</option>
-                </select>
-                <ChevronDown className="absolute right-3 bottom-4 w-4 h-4 text-black/40 pointer-events-none" />
-              </div>
+              <FloatingInput
+                id="ud-frustration"
+                name="frustration"
+                label="What is your biggest digital frustration?"
+                options={[
+                  "My website looks dated",
+                  "Poor mobile experience",
+                  "Low conversion rates",
+                  "Brand doesn't reflect our quality",
+                  "Not sure where to start"
+                ]}
+              />
 
               <div className="flex items-start gap-3 pt-4">
                 <input
@@ -790,16 +684,18 @@ export function UpdateYourDigital() {
                 </label>
               </div>
 
-              {formError && (
-                <p className="text-sm text-red-700 text-center">{formError}</p>
+              {state.errors && (
+                <p className="text-sm text-red-700 text-center">
+                  Something went wrong. Please check your inputs or try again.
+                </p>
               )}
 
               <button
                 type="submit"
-                disabled={status === "submitting"}
+                disabled={state.submitting}
                 className="group w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-black text-white font-bold rounded-xl hover:bg-black/90 transition-colors text-lg mt-4 uppercase tracking-wider disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {status === "submitting" ? "Sending…" : "Submit"}
+                {state.submitting ? "Sending…" : "Submit"}
                 <ArrowRight className="w-5 h-5 transition-transform duration-300 ease-out group-hover:translate-x-4" />
               </button>
             </form>

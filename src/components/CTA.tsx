@@ -1,6 +1,7 @@
 import { useState, type FormEvent, type FocusEvent, type ChangeEvent } from "react";
 import { motion } from "motion/react";
 import { ArrowRight, ChevronDown, CheckCircle } from "lucide-react";
+import { useForm } from "@formspree/react";
 
 function FloatingInput({
   label,
@@ -10,6 +11,7 @@ function FloatingInput({
   options,
   required,
   validationMessage,
+  pattern,
 }: {
   label: string;
   name: string;
@@ -18,6 +20,7 @@ function FloatingInput({
   options?: string[];
   required?: boolean;
   validationMessage?: string;
+  pattern?: string;
 }) {
   const [error, setError] = useState("");
   const [touched, setTouched] = useState(false);
@@ -100,6 +103,7 @@ function FloatingInput({
           name={name}
           type={type}
           required={required}
+          pattern={pattern}
           onBlur={handleBlur}
           onChange={handleChange}
           placeholder=" "
@@ -125,20 +129,17 @@ function FloatingInput({
   );
 }
 
-const FORMSPREE_URL = "https://formspree.io/f/mnjbwnlw";
+const FORMSPREE_ID = "mnjbwnlw";
 
 export function CTA() {
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [formError, setFormError] = useState("");
+  const [state, submitForm] = useForm(FORMSPREE_ID);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setFormError("");
-
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     const form = e.currentTarget;
 
     // Trigger native constraint validation to check all fields
     if (!form.checkValidity()) {
+      e.preventDefault();
       // Focus the first invalid field to trigger its onBlur validation
       const firstInvalid = form.querySelector(":invalid") as HTMLElement | null;
       firstInvalid?.focus();
@@ -153,27 +154,7 @@ export function CTA() {
       return;
     }
 
-    setStatus("submitting");
-    const data = new FormData(form);
-
-    try {
-      const response = await fetch(FORMSPREE_URL, {
-        method: "POST",
-        body: data,
-        headers: { Accept: "application/json" },
-      });
-
-      if (response.ok) {
-        setStatus("success");
-        form.reset();
-      } else {
-        setStatus("error");
-        setFormError("Something went wrong. Please try again.");
-      }
-    } catch {
-      setStatus("error");
-      setFormError("Something went wrong. Please try again.");
-    }
+    submitForm(e);
   }
 
   return (
@@ -194,7 +175,7 @@ export function CTA() {
             presence that actually converts.
           </p>
 
-          {status === "success" ? (
+          {state.succeeded ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -214,15 +195,16 @@ export function CTA() {
               noValidate
               className="max-w-md mx-auto space-y-4 text-left"
             >
+
               <FloatingInput id="name" name="name" label="Your Name" required validationMessage="Please enter your name" />
               <FloatingInput id="email" name="email" label="Work Email" type="email" required validationMessage="Please enter your work email" />
-              <FloatingInput id="phone" name="phone" label="Phone Number" type="tel" />
-              <FloatingInput id="website" name="website" label="Website URL" type="url" />
+              <FloatingInput id="phone" name="phone" label="Phone Number" type="tel" pattern="^[\d\s\-+().]{7,}$" />
+              <FloatingInput id="website" name="website" label="Website URL" type="url" pattern="^https?:\/\/.+\..+" />
               <FloatingInput id="pain-points" name="pain_points" label="What are your pain points?" type="select" options={["Brand", "Digital", "Connection"]} />
 
-              {formError && (
+              {state.errors && (
                 <p className="text-sm text-red-700 text-center">
-                  {formError}
+                  Something went wrong. Please check your inputs or try again.
                 </p>
               )}
 
@@ -245,10 +227,10 @@ export function CTA() {
 
               <button
                 type="submit"
-                disabled={status === "submitting"}
+                disabled={state.submitting}
                 className="group w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-black text-white font-medium rounded-xl hover:bg-black/90 transition-colors text-lg mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {status === "submitting" ? "Sending..." : "Get Free Brand Audit"}
+                {state.submitting ? "Sending..." : "Get Free Brand Audit"}
                 <ArrowRight className="w-5 h-5 transition-transform duration-300 ease-out group-hover:translate-x-4" />
               </button>
             </form>
