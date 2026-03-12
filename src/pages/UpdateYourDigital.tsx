@@ -411,7 +411,7 @@ export function UpdateYourDigital() {
 
   useEffect(() => {
     if (state.succeeded) {
-      navigate('/thank-you');
+      navigate('/thank-you-digital');
     }
   }, [state.succeeded, navigate]);
 

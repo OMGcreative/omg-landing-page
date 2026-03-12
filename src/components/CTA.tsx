@@ -138,7 +138,7 @@ export function CTA() {
 
   useEffect(() => {
     if (state.succeeded) {
-      navigate('/thank-you');
+      navigate('/thank-you-brand');
     }
   }, [state.succeeded, navigate]);
 

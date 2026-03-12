@@ -10,7 +10,8 @@ import { Footer } from "./components/Footer";
 import { HomePage } from "./pages/HomePage";
 import { UpdateYourBrand } from "./pages/UpdateYourBrand";
 import { UpdateYourDigital } from "./pages/UpdateYourDigital";
-import { ThankYou } from "./pages/ThankYou";
+import { ThankYouBrand } from "./pages/ThankYouBrand";
+import { ThankYouDigital } from "./pages/ThankYouDigital";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -30,7 +31,8 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/update-your-brand" element={<UpdateYourBrand />} />
           <Route path="/update-your-digital" element={<UpdateYourDigital />} />
-          <Route path="/thank-you" element={<ThankYou />} />
+          <Route path="/thank-you-brand" element={<ThankYouBrand />} />
+          <Route path="/thank-you-digital" element={<ThankYouDigital />} />
         </Routes>
         <Footer />
       </div>

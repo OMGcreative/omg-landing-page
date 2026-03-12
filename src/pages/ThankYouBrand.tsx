@@ -8,12 +8,12 @@ import { CheckCircle, ArrowRight } from "lucide-react";
 import { useDocumentHead } from "../hooks/useDocumentHead";
 import { Link } from "react-router-dom";
 
-export function ThankYou() {
+export function ThankYouBrand() {
   useDocumentHead({
     title: "Thank You — OMG! Creative",
     description: "Thank you for getting in touch with us. We'll be in contact shortly.",
-    canonical: "https://omgcreative.com.au/thank-you/",
-    ogUrl: "https://omgcreative.com.au/thank-you/",
+    canonical: "/thank-you-brand/",
+    ogUrl: "/thank-you-brand/",
   });
 
   return (
@@ -35,7 +35,7 @@ export function ThankYou() {
         </h1>
         
         <p className="text-xl text-black/80 mb-12 font-medium">
-          We've received your details and have saved your preferences. Our team will be in touch shortly with your free audit.
+          We've received your details and have saved your preferences. Our team will be in touch shortly with your free brand audit.
         </p>
 
         <Link
