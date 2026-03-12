@@ -18,12 +18,12 @@ export function Navbar() {
         </motion.div>
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-secondary">
-          <Link to="/update-your-brand" className={`hover:text-primary transition-colors ${pathname === '/update-your-brand' ? 'text-primary font-semibold' : ''}`}>
+          {/* <Link to="/update-your-brand" className={`hover:text-primary transition-colors ${pathname === '/update-your-brand' ? 'text-primary font-semibold' : ''}`}>
             Brand
           </Link>
           <Link to="/update-your-digital" className={`hover:text-primary transition-colors ${pathname === '/update-your-digital' ? 'text-primary font-semibold' : ''}`}>
             Digital
-          </Link>
+          </Link> */}
           {/* <a href="#" className="hover:text-primary transition-colors">
             What We Do
           </a> */}
