@@ -652,7 +652,7 @@ export function UpdateYourDigital() {
 
               <FloatingInput id="ud-email" name="email" type="email" label="Email*" required />
               <FloatingInput id="ud-phone" name="phone" type="tel" label="Phone Number" pattern="^[\d\s\-+().]{7,}$" />
-              <FloatingInput id="ud-url" name="website" type="url" label="Business URL" pattern="^https?:\/\/.+\..+" />
+              <FloatingInput id="ud-url" name="website" type="url" label="Business URL" pattern="^.+\..+" />
               <FloatingInput id="ud-company" name="company" label="Company Name*" required />
 
               <FloatingInput
