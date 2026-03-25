@@ -211,7 +211,10 @@ function FloatingInput({
   function validate(value: string) {
     if (required && !value.trim()) return validationMessage || `${label.replace('*', '')} is required`;
     if (value.trim() && type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Please enter a valid email address";
-    if (value.trim() && type === "url" && !/^https?:\/\/.+\..+/.test(value)) return "Please enter a valid URL (e.g. https://example.com)";
+    if (value.trim() && type === "url") {
+      const urlRegex = /^[^!*'();:@&=+$,/?%#\[\]\s]{2,}\.[^!*'();:@&=+$,/?%#\[\]\s]{2,}$/;
+      if (!urlRegex.test(value)) return "Please enter a valid URL (e.g. example.com)";
+    }
     if (value.trim() && type === "tel" && !/^[\d\s\-+().]{7,}$/.test(value)) return "Please enter a valid phone number";
     return "";
   }
@@ -268,7 +271,7 @@ function FloatingInput({
         <input
           id={id}
           name={name}
-          type={type}
+          type={type === "url" ? "text" : type}
           required={required}
           pattern={pattern}
           onBlur={handleBlur}
@@ -652,7 +655,7 @@ export function UpdateYourDigital() {
 
               <FloatingInput id="ud-email" name="email" type="email" label="Email*" required />
               <FloatingInput id="ud-phone" name="phone" type="tel" label="Phone Number" pattern="^[\d\s\-+().]{7,}$" />
-              <FloatingInput id="ud-url" name="website" type="url" label="Business URL" pattern="^.+\..+" />
+              <FloatingInput id="ud-url" name="website" type="url" label="Business URL" pattern={"^[^!*'();:@&=+$,/?%#\\[\\]\\s]{2,}\\.[^!*'();:@&=+$,/?%#\\[\\]\\s]{2,}$"} />
               <FloatingInput id="ud-company" name="company" label="Company Name*" required />
 
               <FloatingInput

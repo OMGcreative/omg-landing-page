@@ -33,9 +33,13 @@ function FloatingInput({
     if (value.trim() && type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
       return "Please enter a valid email address";
     }
-    if (value.trim() && type === "url" && !/^.+\..+/.test(value)) {
-      return "Please enter a valid URL (e.g. example.com)";
+    if (value.trim() && type === "url") {
+      const urlRegex = /^[^!*'();:@&=+$,/?%#\[\]\s]{2,}\.[^!*'();:@&=+$,/?%#\[\]\s]{2,}$/;
+      if (!urlRegex.test(value)) {
+        return "Please enter a valid URL (e.g. example.com)";
+      }
     }
+
     if (value.trim() && type === "tel" && !/^[\d\s\-+().]{7,}$/.test(value)) {
       return "Please enter a valid phone number";
     }
@@ -102,7 +106,7 @@ function FloatingInput({
         <input
           id={id}
           name={name}
-          type={type}
+          type={type === "url" ? "text" : type}
           required={required}
           pattern={pattern}
           onBlur={handleBlur}
@@ -197,7 +201,7 @@ export function CTA() {
               <FloatingInput id="name" name="name" label="Your Name" required validationMessage="Please enter your name" />
               <FloatingInput id="email" name="email" label="Work Email" type="email" required validationMessage="Please enter your work email" />
               <FloatingInput id="phone" name="phone" label="Phone Number" type="tel" pattern="^[\d\s\-+().]{7,}$" />
-              <FloatingInput id="website" name="website" label="Website URL" type="url" pattern="^https?:\/\/.+\..+" />
+              <FloatingInput id="website" name="website" label="Website URL" type="url" pattern={"^[^!*'();:@&=+$,/?%#\\[\\]\\s]{2,}\\.[^!*'();:@&=+$,/?%#\\[\\]\\s]{2,}$"} />
               <FloatingInput id="pain-points" name="pain_points" label="What are your pain points?" type="select" options={["Brand", "Digital", "Connection"]} />
 
               {state.errors && (
