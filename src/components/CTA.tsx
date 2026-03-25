@@ -33,8 +33,8 @@ function FloatingInput({
     if (value.trim() && type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
       return "Please enter a valid email address";
     }
-    if (value.trim() && type === "url" && !/^.+\..+/.test(value)) {
-      return "Please enter a valid URL (e.g. example.com)";
+    if (value.trim() && type === "url" && !/^https?:\/\/.+\..+/.test(value)) {
+      return "Please enter a valid URL (e.g. https://example.com)";
     }
     if (value.trim() && type === "tel" && !/^[\d\s\-+().]{7,}$/.test(value)) {
       return "Please enter a valid phone number";
