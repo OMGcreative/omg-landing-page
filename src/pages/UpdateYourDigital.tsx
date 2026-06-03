@@ -649,60 +649,61 @@ export function UpdateYourDigital() {
             className="max-w-lg mx-auto space-y-4 text-left"
           >
             <div className="grid grid-cols-2 gap-4">
-                <FloatingInput id="ud-first-name" name="first_name" label="First Name*" required />
-                <FloatingInput id="ud-last-name" name="last_name" label="Last Name*" required />
-              </div>
+              <FloatingInput id="ud-first-name" name="first_name" label="First Name*" required />
+              <FloatingInput id="ud-last-name" name="last_name" label="Last Name*" required />
+            </div>
 
-              <FloatingInput id="ud-email" name="email" type="email" label="Email*" required />
-              <FloatingInput id="ud-phone" name="phone" type="tel" label="Phone Number" pattern="^[\d\s\-+().]{7,}$" />
-              <FloatingInput id="ud-url" name="website" type="url" label="Business URL" pattern={"^[^!*'();:@&=+$,/?%#\\[\\]\\s]{2,}\\.[^!*'();:@&=+$,/?%#\\[\\]\\s]{2,}$"} />
-              <FloatingInput id="ud-company" name="company" label="Company Name*" required />
+            <FloatingInput id="ud-email" name="email" type="email" label="Email*" required />
+            <FloatingInput id="ud-phone" name="phone" type="tel" label="Phone Number" required pattern="^[\d\s\-+().]{7,}$" />
+            <FloatingInput id="ud-url" name="website" type="url" label="Business URL" required pattern={"^[^!*'();:@&=+$,/?%#\\[\\]\\s]{2,}\\.[^!*'();:@&=+$,/?%#\\[\\]\\s]{2,}$"} />
+            <FloatingInput id="ud-company" name="company" label="Company Name*" required />
 
-              <FloatingInput
-                id="ud-frustration"
-                name="frustration"
-                label="What is your biggest digital frustration?"
-                options={[
-                  "My website looks dated",
-                  "Poor mobile experience",
-                  "Low conversion rates",
-                  "Brand doesn't reflect our quality",
-                  "Not sure where to start"
-                ]}
+            <FloatingInput
+              id="ud-frustration"
+              name="frustration"
+              label="What is your biggest digital frustration?"
+              options={[
+                "My website looks dated",
+                "Poor mobile experience",
+                "Low conversion rates",
+                "Brand doesn't reflect our quality",
+                "Not sure where to start"
+              ]}
+              required
+            />
+
+            <div className="flex items-start gap-3 pt-4">
+              <input
+                id="ud-privacy"
+                name="privacy_consent"
+                type="checkbox"
+                required
+                className="mt-1 w-4 h-4 accent-black"
               />
+              <label htmlFor="ud-privacy" className="text-xs text-black/60 leading-relaxed">
+                By clicking this box, you agree to our{" "}
+                <a href="https://omgcreative.com.au/privacy/" className="underline hover:text-black transition-colors" target="_blank" rel="noopener noreferrer">
+                  privacy policies
+                </a>.
+                By clicking submit below, you consent to allow omgcreative.com.au to store and process the personal information submitted above to provide you the content requested.
+              </label>
+            </div>
 
-              <div className="flex items-start gap-3 pt-4">
-                <input
-                  id="ud-privacy"
-                  name="privacy_consent"
-                  type="checkbox"
-                  required
-                  className="mt-1 w-4 h-4 accent-black"
-                />
-                <label htmlFor="ud-privacy" className="text-xs text-black/60 leading-relaxed">
-                  By clicking this box, you agree to our{" "}
-                  <a href="https://omgcreative.com.au/privacy/" className="underline hover:text-black transition-colors" target="_blank" rel="noopener noreferrer">
-                    privacy policies
-                  </a>.
-                  By clicking submit below, you consent to allow omgcreative.com.au to store and process the personal information submitted above to provide you the content requested.
-                </label>
-              </div>
+            {state.errors && (
+              <p className="text-sm text-red-700 text-center">
+                Something went wrong. Please check your inputs or try again.
+              </p>
+            )}
 
-              {state.errors && (
-                <p className="text-sm text-red-700 text-center">
-                  Something went wrong. Please check your inputs or try again.
-                </p>
-              )}
-
-              <button
-                type="submit"
-                disabled={state.submitting}
-                className="group w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-black text-white font-bold rounded-xl hover:bg-black/90 transition-colors text-lg mt-4 uppercase tracking-wider disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {state.submitting ? "Sending…" : "Submit"}
-                <ArrowRight className="w-5 h-5 transition-transform duration-300 ease-out group-hover:translate-x-4" />
-              </button>
-            </form>
+            <button
+              type="submit"
+              disabled={state.submitting}
+              className="group w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-black text-white font-bold rounded-xl hover:bg-black/90 transition-colors text-lg mt-4 uppercase tracking-wider disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {state.submitting ? "Sending…" : "Submit"}
+              <ArrowRight className="w-5 h-5 transition-transform duration-300 ease-out group-hover:translate-x-4" />
+            </button>
+          </form>
         </div>
       </section>
 

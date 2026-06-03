@@ -6,7 +6,7 @@ const IDLE_TIMEOUT_MS = 3 * 60 * 1000; // 3 minutes
 
 function useIdleTimer(timeout: number) {
   const [isIdle, setIsIdle] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const resetTimer = useCallback(() => {
     setIsIdle(false);

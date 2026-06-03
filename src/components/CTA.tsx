@@ -200,9 +200,9 @@ export function CTA() {
 
               <FloatingInput id="name" name="name" label="Your Name" required validationMessage="Please enter your name" />
               <FloatingInput id="email" name="email" label="Work Email" type="email" required validationMessage="Please enter your work email" />
-              <FloatingInput id="phone" name="phone" label="Phone Number" type="tel" pattern="^[\d\s\-+().]{7,}$" />
-              <FloatingInput id="website" name="website" label="Website URL" type="url" pattern={"^[^!*'();:@&=+$,/?%#\\[\\]\\s]{2,}\\.[^!*'();:@&=+$,/?%#\\[\\]\\s]{2,}$"} />
-              <FloatingInput id="pain-points" name="pain_points" label="What are your pain points?" type="select" options={["Brand", "Digital", "Connection"]} />
+              <FloatingInput id="phone" name="phone" label="Phone Number" type="tel" required pattern="^[\d\s\-+().]{7,}$" />
+              <FloatingInput id="website" name="website" label="Website URL" type="url" required  pattern={"^[^!*'();:@&=+$,/?%#\\[\\]\\s]{2,}\\.[^!*'();:@&=+$,/?%#\\[\\]\\s]{2,}$"} />
+              <FloatingInput id="pain-points" name="pain_points" label="What are your pain points?" type="select" required options={["Brand", "Digital", "Connection"]} />
 
               {state.errors && (
                 <p className="text-sm text-red-700 text-center">
