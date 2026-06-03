@@ -3,14 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useRef, useEffect, type FormEvent, type FocusEvent, type ChangeEvent } from "react";
+import { useRef, useEffect } from "react";
 import { motion, useMotionValue, useTransform, useInView, useScroll, animate } from "motion/react";
-import { ArrowRight, ChevronDown, CheckCircle, ShieldAlert, Smartphone, TrendingUp, Palette, Globe, Users } from "lucide-react";
+import { ArrowRight, ShieldAlert, Smartphone, TrendingUp, Palette, Globe, Users } from "lucide-react";
 import { Partners } from "../components/Partners";
 import { Portfolio } from "../components/Portfolio";
 import { useDocumentHead } from "../hooks/useDocumentHead";
-import { useForm } from "@formspree/react";
-import { useNavigate } from "react-router-dom";
+import { ContactForm } from "../components/ContactForm";
 
 /* ─── Animated counter ─── */
 function AnimatedStat({ value, suffix }: { value: number; suffix: string }) {
@@ -185,113 +184,7 @@ function DeepDiveWrapper({ deepDives }: { deepDives: any[] }) {
   );
 }
 
-/* ─── Floating form input (reusable) ─── */
-function FloatingInput({
-  label,
-  name,
-  type = "text",
-  id,
-  options,
-  required,
-  validationMessage,
-  pattern,
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  id: string;
-  options?: string[];
-  required?: boolean;
-  validationMessage?: string;
-  pattern?: string;
-}) {
-  const [error, setError] = useState("");
-  const [touched, setTouched] = useState(false);
-
-  function validate(value: string) {
-    if (required && !value.trim()) return validationMessage || `${label.replace('*', '')} is required`;
-    if (value.trim() && type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Please enter a valid email address";
-    if (value.trim() && type === "url") {
-      const urlRegex = /^[^!*'();:@&=+$,/?%#\[\]\s]{2,}\.[^!*'();:@&=+$,/?%#\[\]\s]{2,}$/;
-      if (!urlRegex.test(value)) return "Please enter a valid URL (e.g. example.com)";
-    }
-    if (value.trim() && type === "tel" && !/^[\d\s\-+().]{7,}$/.test(value)) return "Please enter a valid phone number";
-    return "";
-  }
-
-  function handleBlur(e: FocusEvent<HTMLInputElement | HTMLSelectElement>) {
-    setTouched(true);
-    setError(validate(e.target.value));
-  }
-
-  function handleChange(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
-    if (touched) setError(validate(e.target.value));
-  }
-
-  const showError = touched && error;
-
-  if (options) {
-    return (
-      <div className="w-full">
-        <div className="relative">
-          <select
-            id={id}
-            name={name}
-            defaultValue=""
-            required={required}
-            onBlur={handleBlur}
-            onChange={handleChange}
-            className={`peer w-full px-3 pt-6 pb-3 bg-white/10 border-0 border-b text-black focus:outline-none focus:border-b-2 appearance-none transition-colors ${
-              showError ? "border-red-600 focus:border-red-600" : "border-black/10 focus:border-black"
-            }`}
-          >
-            <option value="" disabled hidden />
-            {options.map((opt) => (
-              <option key={opt} value={opt} className="bg-white text-black">
-                {opt}
-              </option>
-            ))}
-          </select>
-          <label
-            htmlFor={id}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-black/50 font-medium origin-left transition-all duration-300 ease-out peer-focus:top-0 peer-focus:translate-y-0 peer-focus:scale-75 peer-focus:text-black/70 peer-[:not([value=''])]:top-0 peer-[:not([value=''])]:translate-y-0 peer-[:not([value=''])]:scale-75 peer-[:not([value=''])]:text-black/70"
-          >
-            {label}
-          </label>
-          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black/40 pointer-events-none" />
-        </div>
-        {showError && <p className="text-xs text-red-700 mt-1 ml-1 font-medium">{error}</p>}
-      </div>
-    );
-  }
-
-  return (
-    <div className="w-full">
-      <div className="relative">
-        <input
-          id={id}
-          name={name}
-          type={type === "url" ? "text" : type}
-          required={required}
-          pattern={pattern}
-          onBlur={handleBlur}
-          onChange={handleChange}
-          placeholder=" "
-          className={`peer w-full px-3 pt-6 pb-3 bg-white/10 border-0 border-b text-black focus:outline-none focus:border-b-2 placeholder-transparent transition-colors ${
-            showError ? "border-red-600 focus:border-red-600" : "border-black/10 focus:border-black"
-          }`}
-        />
-        <label
-          htmlFor={id}
-          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-black/50 font-medium origin-left transition-all duration-300 ease-out peer-focus:top-0 peer-focus:translate-y-0 peer-focus:scale-75 peer-focus:text-black/70 peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-black/70"
-        >
-          {label}
-        </label>
-      </div>
-      {showError && <p className="text-xs text-red-700 mt-1 ml-1 font-medium">{error}</p>}
-    </div>
-  );
-}
+// FloatingInput removed - consolidated in ContactForm
 
 /* ─── Pain‑point card data ─── */
 const painPoints = [
@@ -394,9 +287,6 @@ const deepDives = [
   },
 ];
 
-/* ─── Formspree endpoint ─── */
-const FORMSPREE_ID = "mbdawnrj";
-
 /* ═══════════════════════════════════════════════════════════
    PAGE COMPONENT
    ═══════════════════════════════════════════════════════════ */
@@ -408,38 +298,6 @@ export function UpdateYourDigital() {
     canonical: "https://omgcreative.com.au/update-your-digital/",
     ogUrl: "https://omgcreative.com.au/update-your-digital/",
   });
-
-  const navigate = useNavigate();
-  const [state, submitForm] = useForm(FORMSPREE_ID);
-
-  useEffect(() => {
-    if (state.succeeded) {
-      navigate('/thank-you-digital');
-    }
-  }, [state.succeeded, navigate]);
-
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    const form = e.currentTarget;
-    if (!form.checkValidity()) {
-      e.preventDefault();
-      const firstInvalid = form.querySelector(":invalid") as HTMLElement | null;
-      firstInvalid?.focus();
-      firstInvalid?.blur();
-      form.querySelectorAll(":invalid").forEach((el) => {
-        (el as HTMLElement).focus();
-        (el as HTMLElement).blur();
-      });
-      firstInvalid?.focus();
-      return;
-    }
-
-    // Save form data locally before submission
-    const formData = new FormData(form);
-    const dataObj = Object.fromEntries(formData.entries());
-    localStorage.setItem("omg_uyd_form_data", JSON.stringify(dataObj));
-
-    submitForm(e);
-  }
 
   return (
     <main>
@@ -643,67 +501,8 @@ export function UpdateYourDigital() {
             </p>
           </motion.div>
 
-          <form
-            onSubmit={handleSubmit}
-            noValidate
-            className="max-w-lg mx-auto space-y-4 text-left"
-          >
-            <div className="grid grid-cols-2 gap-4">
-              <FloatingInput id="ud-first-name" name="first_name" label="First Name*" required />
-              <FloatingInput id="ud-last-name" name="last_name" label="Last Name*" required />
-            </div>
-
-            <FloatingInput id="ud-email" name="email" type="email" label="Email*" required />
-            <FloatingInput id="ud-phone" name="phone" type="tel" label="Phone Number" required pattern="^[\d\s\-+().]{7,}$" />
-            <FloatingInput id="ud-url" name="website" type="url" label="Business URL" required pattern={"^[^!*'();:@&=+$,/?%#\\[\\]\\s]{2,}\\.[^!*'();:@&=+$,/?%#\\[\\]\\s]{2,}$"} />
-            <FloatingInput id="ud-company" name="company" label="Company Name*" required />
-
-            <FloatingInput
-              id="ud-frustration"
-              name="frustration"
-              label="What is your biggest digital frustration?"
-              options={[
-                "My website looks dated",
-                "Poor mobile experience",
-                "Low conversion rates",
-                "Brand doesn't reflect our quality",
-                "Not sure where to start"
-              ]}
-              required
-            />
-
-            <div className="flex items-start gap-3 pt-4">
-              <input
-                id="ud-privacy"
-                name="privacy_consent"
-                type="checkbox"
-                required
-                className="mt-1 w-4 h-4 accent-black"
-              />
-              <label htmlFor="ud-privacy" className="text-xs text-black/60 leading-relaxed">
-                By clicking this box, you agree to our{" "}
-                <a href="https://omgcreative.com.au/privacy/" className="underline hover:text-black transition-colors" target="_blank" rel="noopener noreferrer">
-                  privacy policies
-                </a>.
-                By clicking submit below, you consent to allow omgcreative.com.au to store and process the personal information submitted above to provide you the content requested.
-              </label>
-            </div>
-
-            {state.errors && (
-              <p className="text-sm text-red-700 text-center">
-                Something went wrong. Please check your inputs or try again.
-              </p>
-            )}
-
-            <button
-              type="submit"
-              disabled={state.submitting}
-              className="group w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-black text-white font-bold rounded-xl hover:bg-black/90 transition-colors text-lg mt-4 uppercase tracking-wider disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {state.submitting ? "Sending…" : "Submit"}
-              <ArrowRight className="w-5 h-5 transition-transform duration-300 ease-out group-hover:translate-x-4" />
-            </button>
-          </form>
+          <ContactForm formType="digital" />
+          
         </div>
       </section>
 
